@@ -1,0 +1,14 @@
+.venv
+__pycache__
+*.pyc
+*.pyo
+data/
+exports/
+httpcache/
+.scrapy/
+.git/
+.pytest_cache/
+*.log
+/tmp/
+.env
+.claude/

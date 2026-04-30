@@ -1,0 +1,417 @@
+# Pakistan political events to track. Each `category` is written verbatim
+# to the DB column.
+#
+# `keywords_en` / `keywords_ur` — atomic terms (1-3 words). Match if any term
+# appears as a substring in the headline or first 2KB of the body, lowercased.
+# Order events from most-specific to least-specific so multi-event hits
+# resolve to the more specific category first.
+#
+# `slug_keywords` — short tokens for URL prefilter (English-transliterated).
+
+# ──────────────── ORIGINAL 8 EVENTS ────────────────
+
+- id: imran_trial
+  category: "Imran Khan Arrest & Trial"
+  date_from: 2024-01-01
+  date_to:   2026-12-31
+  slug_keywords: ["imran-khan", "toshakhana", "cipher", "al-qadir", "qadir-trust", "pti-founder", "bushra-bibi"]
+  keywords_en:
+    - "imran khan"
+    - "toshakhana"
+    - "cipher case"
+    - "al-qadir"
+    - "al qadir"
+    - "pti founder"
+    - "bushra bibi"
+    - "bushra bb"
+    - "former prime minister imran"
+    - "ex-pm imran"
+  keywords_ur:
+    - "عمران خان"
+    - "توشہ خانہ"
+    - "سائفر کیس"
+    - "القادر ٹرسٹ"
+    - "بانی پی ٹی آئی"
+    - "بشریٰ بی بی"
+    - "بشریٰ بی بی"
+
+- id: azm_e_istehkam
+  category: "Azm-e-Istehkam Operation"
+  date_from: 2024-06-01
+  date_to:   2026-12-31
+  slug_keywords: ["azm-e-istehkam", "azm-istehkam", "operation-azm"]
+  keywords_en:
+    - "azm-e-istehkam"
+    - "azm e istehkam"
+    - "operation azm"
+  keywords_ur:
+    - "عزم استحکام"
+    - "عزمِ استحکام"
+    - "آپریشن عزم"
+
+- id: elections_2024
+  category: "2024 General Elections"
+  date_from: 2024-01-01
+  date_to:   2026-12-31
+  slug_keywords: ["election", "polls", "ecp", "form-47", "form-45", "vote"]
+  keywords_en:
+    - "general elections 2024"
+    - "general election 2024"
+    - "form 47"
+    - "form 45"
+    - "election rigging"
+    - "rigged elections"
+    - "election commission of pakistan"
+    - "polling stations"
+    - "polling day"
+    - "8 february election"
+    - "february 8 election"
+    - "8 feb elections"
+    - "by-election"
+    - "by-polls"
+  keywords_ur:
+    - "عام انتخابات 2024"
+    - "الیکشن 2024"
+    - "فارم 47"
+    - "فارم 45"
+    - "الیکشن کمیشن"
+    - "8 فروری انتخابات"
+    - "ضمنی انتخاب"
+
+- id: judicial_crisis
+  category: "Judicial Crisis"
+  date_from: 2024-01-01
+  date_to:   2026-12-31
+  slug_keywords: ["supreme-court", "chief-justice", "qazi-faez", "constitutional-amendment", "26th-amendment", "judges-letter", "ihc"]
+  keywords_en:
+    - "qazi faez isa"
+    - "qazi faiz isa"
+    - "26th amendment"
+    - "26th constitutional amendment"
+    - "practice and procedure act"
+    - "judges letter"
+    - "judges' letter"
+    - "supreme court bench"
+    - "chief justice of pakistan"
+    - "supreme judicial council"
+    - "ihc judges"
+    - "constitutional bench"
+    - "judicial commission"
+  keywords_ur:
+    - "قاضی فائز عیسیٰ"
+    - "26ویں آئینی ترمیم"
+    - "26 ویں ترمیم"
+    - "ججز خط"
+    - "سپریم جوڈیشل کونسل"
+    - "آئینی بنچ"
+
+- id: afghan_refugees
+  category: "Afghan Refugee Expulsion"
+  date_from: 2024-01-01
+  date_to:   2026-12-31
+  slug_keywords: ["afghan", "refugee", "deportation", "repatriation", "illegal-foreigners"]
+  keywords_en:
+    - "afghan refugees"
+    - "afghan migrants"
+    - "afghan deportation"
+    - "afghan nationals"
+    - "illegal foreigners"
+    - "illegal afghan"
+    - "repatriation of afghan"
+    - "afghan returnees"
+    - "iffp"
+  keywords_ur:
+    - "افغان مہاجرین"
+    - "افغان پناہ گزین"
+    - "افغان شہری"
+    - "غیر قانونی افغان"
+    - "غیر قانونی غیر ملکی"
+
+- id: gaza
+  category: "Gaza Conflict Coverage"
+  date_from: 2024-01-01
+  date_to:   2026-12-31
+  slug_keywords: ["gaza", "rafah", "hamas", "palestine", "palestinian", "netanyahu", "idf"]
+  keywords_en:
+    - "gaza"
+    - "rafah"
+    - "hamas"
+    - "palestinian"
+    - "israeli forces"
+    - "israel-hamas"
+    - "israeli airstrike"
+    - "netanyahu"
+    - "idf"
+    - "west bank"
+  keywords_ur:
+    - "غزہ"
+    - "اسرائیل"
+    - "فلسطین"
+    - "حماس"
+    - "رفح"
+    - "نیتن یاہو"
+
+- id: wheat_inflation
+  category: "Inflation / Wheat Crisis"
+  date_from: 2024-01-01
+  date_to:   2026-12-31
+  slug_keywords: ["inflation", "wheat", "atta", "flour", "wheat-import", "petrol-price", "electricity-tariff"]
+  keywords_en:
+    - "wheat crisis"
+    - "wheat import"
+    - "wheat scandal"
+    - "wheat shortage"
+    - "atta price"
+    - "flour price"
+    - "atta crisis"
+    - "consumer price index"
+    - "cpi inflation"
+    - "food inflation"
+    - "petrol price"
+    - "electricity tariff"
+    - "gas price hike"
+  keywords_ur:
+    - "گندم بحران"
+    - "گندم درآمد"
+    - "آٹے کی قیمت"
+    - "آٹا بحران"
+    - "مہنگائی"
+    - "پٹرول کی قیمت"
+    - "بجلی کی قیمت"
+
+- id: imf_crisis
+  category: "IMF / Economic Crisis"
+  date_from: 2024-01-01
+  date_to:   2026-12-31
+  slug_keywords: ["imf", "bailout", "rupee", "dollar", "fbr", "stand-by", "extended-fund", "world-bank"]
+  keywords_en:
+    - "imf bailout"
+    - "imf programme"
+    - "imf program"
+    - "imf review"
+    - "imf tranche"
+    - "imf staff"
+    - "stand-by arrangement"
+    - "extended fund facility"
+    - "imf board"
+    - "imf loan"
+    - "imf agreement"
+    - "imf delegation"
+    - "world bank"
+    - "external financing"
+  keywords_ur:
+    - "آئی ایم ایف"
+    - "آئی ایم ایف پروگرام"
+    - "آئی ایم ایف قسط"
+    - "بیل آؤٹ"
+    - "اسٹینڈ بائی"
+    - "ورلڈ بینک"
+
+# ──────────────── ADDITIONAL POLITICAL TOPICS ────────────────
+
+- id: pti_protests
+  category: "PTI Protests & Crackdown"
+  date_from: 2024-01-01
+  date_to:   2026-12-31
+  slug_keywords: ["pti", "tehreek-e-insaf", "d-chowk", "long-march", "pti-rally", "pti-protest"]
+  keywords_en:
+    - "pti rally"
+    - "pti protest"
+    - "pti march"
+    - "pti long march"
+    - "d-chowk"
+    - "d chowk"
+    - "tehreek-e-insaf"
+    - "pti workers"
+    - "pti supporters"
+    - "may 9"
+  keywords_ur:
+    - "پی ٹی آئی احتجاج"
+    - "پی ٹی آئی ریلی"
+    - "پی ٹی آئی لانگ مارچ"
+    - "ڈی چوک"
+    - "تحریک انصاف"
+    - "9 مئی"
+
+- id: govt_pml_n
+  category: "Shehbaz Govt & PML-N Politics"
+  date_from: 2024-01-01
+  date_to:   2026-12-31
+  slug_keywords: ["shehbaz-sharif", "shahbaz", "pml-n", "nawaz-sharif", "maryam-nawaz", "ishaq-dar", "punjab-cm"]
+  keywords_en:
+    - "shehbaz sharif"
+    - "shahbaz sharif"
+    - "prime minister shehbaz"
+    - "nawaz sharif"
+    - "maryam nawaz"
+    - "ishaq dar"
+    - "pml-n government"
+    - "pmln government"
+    - "punjab cm"
+    - "chief minister punjab"
+    - "deputy prime minister"
+  keywords_ur:
+    - "شہباز شریف"
+    - "وزیر اعظم شہباز"
+    - "نواز شریف"
+    - "مریم نواز"
+    - "اسحاق ڈار"
+    - "وزیر اعلیٰ پنجاب"
+
+- id: army_isi
+  category: "Army & ISI Politics"
+  date_from: 2024-01-01
+  date_to:   2026-12-31
+  slug_keywords: ["army-chief", "asim-munir", "ispr", "isi", "field-marshal", "coas"]
+  keywords_en:
+    - "asim munir"
+    - "general asim"
+    - "army chief"
+    - "ispr"
+    - "field marshal"
+    - "chief of army staff"
+    - "coas"
+    - "isi chief"
+    - "establishment"
+    - "military establishment"
+  keywords_ur:
+    - "عاصم منیر"
+    - "آرمی چیف"
+    - "آئی ایس پی آر"
+    - "فیلڈ مارشل"
+    - "اسٹیبلشمنٹ"
+    - "آئی ایس آئی"
+
+- id: tlp_tehreek
+  category: "TLP & Religious Politics"
+  date_from: 2024-01-01
+  date_to:   2026-12-31
+  slug_keywords: ["tlp", "tehreek-e-labbaik", "khadim-rizvi", "saad-rizvi", "labbaik"]
+  keywords_en:
+    - "tehreek-e-labbaik"
+    - "tlp pakistan"
+    - "saad rizvi"
+    - "khadim rizvi"
+    - "labbaik"
+  keywords_ur:
+    - "تحریک لبیک"
+    - "ٹی ایل پی"
+    - "سعد رضوی"
+    - "خادم رضوی"
+
+- id: terrorism_ttp
+  category: "TTP & Terrorism"
+  date_from: 2024-01-01
+  date_to:   2026-12-31
+  slug_keywords: ["ttp", "tehreek-e-taliban", "terrorism", "kp-attack", "balochistan-attack", "khyber-pakhtunkhwa-attack"]
+  keywords_en:
+    - "tehreek-e-taliban"
+    - "ttp"
+    - "ttp attack"
+    - "terrorist attack"
+    - "kp attack"
+    - "balochistan attack"
+    - "blf"
+    - "majeed brigade"
+    - "ispr martyred"
+    - "soldiers martyred"
+    - "fata"
+  keywords_ur:
+    - "تحریک طالبان"
+    - "ٹی ٹی پی"
+    - "دہشت گردی"
+    - "خود کش حملہ"
+
+- id: india_relations
+  category: "India-Pakistan Relations"
+  date_from: 2024-01-01
+  date_to:   2026-12-31
+  slug_keywords: ["india", "kashmir", "loc", "modi", "pulwama", "pahalgam"]
+  keywords_en:
+    - "india pakistan"
+    - "indian forces"
+    - "kashmir"
+    - "line of control"
+    - "loc"
+    - "modi"
+    - "indus waters"
+    - "indian aggression"
+    - "pahalgam"
+  keywords_ur:
+    - "بھارت پاکستان"
+    - "کشمیر"
+    - "لائن آف کنٹرول"
+    - "مودی"
+    - "بھارتی فوج"
+
+- id: bilawal_ppp
+  category: "PPP Politics"
+  date_from: 2024-01-01
+  date_to:   2026-12-31
+  slug_keywords: ["bilawal-bhutto", "asif-zardari", "ppp", "bilawal", "zardari"]
+  keywords_en:
+    - "bilawal bhutto"
+    - "asif zardari"
+    - "asif ali zardari"
+    - "ppp government"
+    - "ppp leadership"
+    - "president zardari"
+  keywords_ur:
+    - "بلاول بھٹو"
+    - "آصف زرداری"
+    - "صدر زرداری"
+    - "پیپلز پارٹی"
+
+- id: balochistan_unrest
+  category: "Balochistan Unrest"
+  date_from: 2024-01-01
+  date_to:   2026-12-31
+  slug_keywords: ["balochistan", "baloch", "blf", "bla", "gwadar", "quetta"]
+  keywords_en:
+    - "balochistan"
+    - "baloch yakjehti"
+    - "balochistan liberation"
+    - "bla"
+    - "gwadar protest"
+    - "quetta attack"
+    - "mahrang baloch"
+    - "missing persons"
+  keywords_ur:
+    - "بلوچستان"
+    - "گوادر"
+    - "کوئٹہ"
+    - "لاپتہ افراد"
+
+- id: china_cpec
+  category: "China & CPEC"
+  date_from: 2024-01-01
+  date_to:   2026-12-31
+  slug_keywords: ["cpec", "china-pakistan", "belt-and-road", "gwadar-port"]
+  keywords_en:
+    - "cpec"
+    - "china pakistan economic"
+    - "belt and road"
+    - "gwadar port"
+    - "chinese investment"
+    - "chinese workers"
+  keywords_ur:
+    - "سی پیک"
+    - "چین پاکستان"
+    - "گوادر پورٹ"
+
+- id: iran_relations
+  category: "Iran-Pakistan Relations"
+  date_from: 2024-01-01
+  date_to:   2026-12-31
+  slug_keywords: ["iran", "tehran", "iran-strike", "balochistan-iran"]
+  keywords_en:
+    - "iran pakistan"
+    - "iranian strike"
+    - "iran strike"
+    - "tehran"
+    - "iran-pakistan"
+    - "jaish al-adl"
+  keywords_ur:
+    - "ایران پاکستان"
+    - "ایران حملہ"
+    - "تہران"

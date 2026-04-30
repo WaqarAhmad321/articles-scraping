@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "defaultMode": "bypassPermissions",
+    "allow": [
+      "Bash(docker compose ps *)",
+      "Bash(aws logs filter-log-events *)",
+      "Bash(aws ecs describe-task-definition *)",
+      "Bash(aws ecs describe-services *)",
+      "Bash(aws ecs describe-tasks *)",
+      "Bash(aws sts get-caller-identity *)",
+      "Bash(aws ecs list-task-definitions *)",
+      "Bash(aws logs describe-log-groups *)",
+      "Bash(aws acm list-certificates *)",
+      "Bash(aws ecs list-clusters *)",
+      "Bash(~/Android/Sdk/platform-tools/adb devices *)"
+    ]
+  }
+}

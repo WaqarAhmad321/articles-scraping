@@ -1,0 +1,261 @@
+# Per-source crawl config for the sitemap-based architecture.
+#
+# `sitemaps`: list of sitemap-index or urlset URLs.
+# `article_url_pattern`: regex an article URL must match.
+# `selectors`: per-site fallbacks for headline/author/date (trafilatura handles body).
+# `render`: "static" or "playwright".
+
+dawn:
+  display_name: "Dawn News"
+  language_default: "English"
+  allowed_domains: ["dawn.com"]
+  # Dawn's sitemap is just landing pages; /search and /archive are robots-blocked.
+  # Section pages render listings via JS, so we walk them with Playwright.
+  sitemaps: []
+  section_pages: ["pakistan", "world", "opinion", "business",
+                  "newspaper/editorial", "newspaper/columns", "blogs"]
+  section_pages_max: 60
+  article_url_pattern: "/news/\\d+/|/blogs/\\d+/"
+  render: "playwright"
+  selectors:
+    headline: "h1.story__title::text, h2.story__title::text, h1::text"
+    author: ".story__byline a::text, .story__byline span.author::text, .author-name::text"
+    date: "span.timestamp__date::attr(title), span.timestamp__date::text, time::attr(datetime)"
+
+bbc_urdu:
+  display_name: "BBC Urdu"
+  language_default: "Urdu"
+  allowed_domains: ["bbc.com"]
+  # BBC's news index only has the last ~48h. The archive sitemaps span all
+  # years; we walk archives that statistically contain 2023-2024 lastmods
+  # and rely on the per-URL lastmod filter inside parse_sitemap.
+  sitemaps:
+    - "https://www.bbc.com/sitemaps/https-sitemap-com-archive-100.xml"
+    - "https://www.bbc.com/sitemaps/https-sitemap-com-archive-101.xml"
+    - "https://www.bbc.com/sitemaps/https-sitemap-com-archive-102.xml"
+    - "https://www.bbc.com/sitemaps/https-sitemap-com-archive-103.xml"
+    - "https://www.bbc.com/sitemaps/https-sitemap-com-archive-104.xml"
+    - "https://www.bbc.com/sitemaps/https-sitemap-com-archive-105.xml"
+    - "https://www.bbc.com/sitemaps/https-sitemap-com-archive-106.xml"
+    - "https://www.bbc.com/sitemaps/https-sitemap-com-archive-107.xml"
+    - "https://www.bbc.com/sitemaps/https-sitemap-com-archive-108.xml"
+    - "https://www.bbc.com/sitemaps/https-sitemap-com-archive-109.xml"
+    - "https://www.bbc.com/sitemaps/https-sitemap-com-archive-110.xml"
+    - "https://www.bbc.com/sitemaps/https-sitemap-com-archive-111.xml"
+    - "https://www.bbc.com/sitemaps/https-sitemap-com-archive-112.xml"
+    - "https://www.bbc.com/sitemaps/https-sitemap-com-archive-113.xml"
+    - "https://www.bbc.com/sitemaps/https-sitemap-com-archive-114.xml"
+    - "https://www.bbc.com/sitemaps/https-sitemap-com-archive-115.xml"
+    - "https://www.bbc.com/sitemaps/https-sitemap-com-archive-116.xml"
+    - "https://www.bbc.com/sitemaps/https-sitemap-com-archive-117.xml"
+    - "https://www.bbc.com/sitemaps/https-sitemap-com-archive-118.xml"
+  article_url_pattern: "/urdu/(articles/|pakistan-|world-|regional-|sport-|science-|entertainment-)"
+  render: "static"
+  selectors:
+    headline: "h1#main-heading::text, h1::text"
+    author: "div[data-testid='byline-new'] span::text"
+    date: "time::attr(datetime)"
+
+express_sitemap:
+  display_name: "Express News"
+  language_default: "Urdu"
+  allowed_domains: ["express.pk"]
+  # Walk recent posts-* sub-sitemaps (each has ~5000 dated URLs).
+  # Express has posts-1..posts-93; numbering is roughly chronological (newer = higher).
+  # Express numbering is REVERSED: posts-1 is most recent (2026-Q1),
+  # each sub-sitemap covers ~6 weeks. posts-1..posts-22 covers 2024-01 → 2026-04.
+  sitemaps:
+    - "https://www.express.pk/sitemap/posts-1.xml"
+    - "https://www.express.pk/sitemap/posts-2.xml"
+    - "https://www.express.pk/sitemap/posts-3.xml"
+    - "https://www.express.pk/sitemap/posts-4.xml"
+    - "https://www.express.pk/sitemap/posts-5.xml"
+    - "https://www.express.pk/sitemap/posts-6.xml"
+    - "https://www.express.pk/sitemap/posts-7.xml"
+    - "https://www.express.pk/sitemap/posts-8.xml"
+    - "https://www.express.pk/sitemap/posts-9.xml"
+    - "https://www.express.pk/sitemap/posts-10.xml"
+    - "https://www.express.pk/sitemap/posts-11.xml"
+    - "https://www.express.pk/sitemap/posts-12.xml"
+    - "https://www.express.pk/sitemap/posts-13.xml"
+    - "https://www.express.pk/sitemap/posts-14.xml"
+    - "https://www.express.pk/sitemap/posts-15.xml"
+    - "https://www.express.pk/sitemap/posts-16.xml"
+    - "https://www.express.pk/sitemap/posts-17.xml"
+    - "https://www.express.pk/sitemap/posts-18.xml"
+    - "https://www.express.pk/sitemap/posts-19.xml"
+    - "https://www.express.pk/sitemap/posts-20.xml"
+    - "https://www.express.pk/sitemap/posts-21.xml"
+    - "https://www.express.pk/sitemap/posts-22.xml"
+  article_url_pattern: "/story/\\d+/"
+  render: "static"
+  selectors:
+    headline: "h1.story-title::text, h1::text"
+    author: ".story-byline a::text, .author-name::text"
+    date: ".story-time::attr(datetime), .story-time::text, time::attr(datetime)"
+
+express:
+  display_name: "Express News"
+  language_default: "Urdu"
+  allowed_domains: ["express.pk"]
+  # Express's tag pages give event-targeted listings — much higher precision
+  # than walking 122 × 5000-entry sitemap chunks.
+  tag_pages:
+    - "imran-khan"
+    - "imran"
+    - "pti"
+    - "tehreek-e-insaf"
+    - "election-2024"
+    - "general-election-2024"
+    - "form-47"
+    - "form-45"
+    - "imf"
+    - "rupee"
+    - "wheat-crisis"
+    - "atta"
+    - "supreme-court"
+    - "qazi-faez-isa"
+    - "judges-letter"
+    - "26th-amendment"
+    - "gaza"
+    - "israel"
+    - "palestine"
+    - "afghan-refugees"
+    - "afghan"
+    - "deportation"
+    - "azm-e-istehkam"
+    - "category/pakistan"
+    - "category/business"
+    - "category/world"
+    # Opinion / column / editorial sections (Express's strongest opinion archive)
+    - "opinion"
+    - "opinion/blog"
+    - "blog"
+    - "editorial"
+    - "category/opinion"
+    - "category/editorial"
+    - "category/blogs"
+  sitemaps: ["https://www.express.pk/sitemap.xml"]
+  article_url_pattern: "/story/\\d+/"
+  render: "static"
+  selectors:
+    headline: "h1.story-title::text, h1::text"
+    author: ".story-byline a::text, .author-name::text"
+    date: ".story-time::attr(datetime), .story-time::text, time::attr(datetime)"
+
+ninetytwo:
+  display_name: "92 News"
+  language_default: "Urdu"
+  allowed_domains: ["92newshd.tv"]
+  # /sitemap.xml returns 403 even with browser UA; category pages also blocked.
+  # Fall back to RSS — many WP sites expose /feed/ which bypasses Cloudflare.
+  sitemaps: []
+  rss_feeds:
+    - "https://www.92newshd.tv/feed/"
+    - "https://www.92newshd.tv/category/national/feed/"
+    - "https://www.92newshd.tv/category/world/feed/"
+    - "https://www.92newshd.tv/category/business/feed/"
+    - "https://www.92newshd.tv/category/columns/feed/"
+  section_pages: []
+  section_pages_max: 50
+  article_url_pattern: "/[a-z0-9-]{15,}/?$"
+  render: "static"
+  selectors:
+    headline: "h1.entry-title::text, h1::text"
+    author: ".author a::text, .post-author a::text"
+    date: "time.entry-date::attr(datetime), time::attr(datetime)"
+
+geo:
+  display_name: "Geo News"
+  language_default: "Urdu"
+  allowed_domains: ["geo.tv"]
+  # Geo's category pages render statically when given a browser User-Agent.
+  sitemaps: []
+  section_pages: ["category/pakistan", "category/world", "category/business",
+                  "category/sports", "category/blog", "category/op-ed",
+                  "category/columns", "category/health", "category/showbiz",
+                  "category/regional", "category/national", "category/politics",
+                  "category/economy", "category/entertainment", "category/science"]
+  section_pages_max: 100
+  article_url_pattern: "/latest/\\d+-"
+  render: "static"
+  selectors:
+    headline: "h1.story-title::text, h1::text"
+    author: ".author-name a::text, .byline a::text"
+    date: ".story-date::text, time::attr(datetime)"
+
+ary:
+  display_name: "ARY News"
+  language_default: "Urdu"
+  allowed_domains: ["arynews.tv"]
+  # news_sitemap.xml only has the last ~48h. For 2023-2024 we walk category
+  # archives. ARY renders these with JS, so playwright is required.
+  sitemaps: []
+  section_pages: ["category/pakistan", "category/business", "category/sports",
+                  "category/lifestyle", "category/showbiz", "category/world",
+                  "category/health", "category/science", "category/regional",
+                  "category/article", "category/middle-east", "category/asia",
+                  "category/europe", "category/america", "category/africa",
+                  "category/latest", "category/photos", "category/videos",
+                  "category/national", "category/local", "category/op-ed",
+                  "category/columns", "category/blogs", "category/feature",
+                  "category/cricket", "category/football", "category/tennis"]
+  section_pages_max: 100
+  article_url_pattern: "arynews\\.tv/[a-z0-9][a-z0-9-]+/?$"
+  render: "static"
+  selectors:
+    headline: "h1.entry-title::text, h1::text"
+    author: ".author-name::text, .post-author a::text"
+    date: "time::attr(datetime), .post-date::text"
+
+ary_urdu:
+  display_name: "ARY News (Urdu)"
+  language_default: "Urdu"
+  allowed_domains: ["arynews.tv"]
+  sitemaps: []
+  section_pages: ["category/pakistan", "category/world", "category/business",
+                  "category/sports", "category/entertainment", "category/regional",
+                  "category/middle-east", "category/asia", "category/national",
+                  "category/health", "category/op-ed", "category/featured",
+                  "category/columns", "category/showbiz",
+                  # Blog/column sections that exist on urdu.arynews.tv
+                  "category/urdu-blogs", "category/blog", "category/blogs"]
+  section_pages_max: 100
+  article_url_pattern: "urdu\\.arynews\\.tv/[a-z0-9][a-z0-9-]+/?$"
+  render: "static"
+  selectors:
+    headline: "h1.entry-title::text, h1::text"
+    author: ".author-name::text, .post-author a::text"
+    date: "time::attr(datetime), .post-date::text"
+
+dawnnews:
+  display_name: "Dawn News (Urdu)"
+  language_default: "Urdu"
+  allowed_domains: ["dawnnews.tv"]
+  # dawnnews.tv is Dawn's Urdu video/news platform. Pages render via JS so we
+  # use Playwright for listings; articles themselves are server-rendered.
+  sitemaps: []
+  section_pages: ["pakistan", "world", "business", "sports", "entertainment",
+                  "regional", "ovo", "lifestyle",
+                  # Opinion sections (نقطہ نظر / قلم کار / اداریہ / فیچرز / کالم / بلاگ)
+                  "opinions", "opinions/columnist", "opinions/editorial",
+                  "opinions/features"]
+  section_pages_max: 60
+  article_url_pattern: "dawnnews\\.tv/news/\\d+/"
+  render: "playwright"
+  selectors:
+    headline: "h1.story__title::text, h1::text"
+    author: ".story__byline a::text, .author-name::text"
+    date: "span.timestamp__date::attr(title), time::attr(datetime)"
+
+abbtakk:
+  display_name: "Abb Takk News"
+  language_default: "Urdu"
+  allowed_domains: ["abbtakk.tv"]
+  sitemaps: ["https://abbtakk.tv/sitemap_index.xml"]
+  article_url_pattern: "abbtakk\\.tv/[a-z0-9-]+/?$"
+  render: "static"
+  selectors:
+    headline: "h1.entry-title::text, h1::text"
+    author: ".author a::text, .post-author::text"
+    date: "time::attr(datetime), .post-date::text"

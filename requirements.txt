@@ -1,0 +1,9 @@
+Scrapy>=2.11,<3.0
+scrapy-playwright>=0.0.40
+playwright>=1.45
+trafilatura>=1.10
+PyYAML>=6.0
+python-dateutil>=2.9
+w3lib>=2.2
+itemadapter>=0.9
+pytest>=8.0

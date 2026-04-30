@@ -1,0 +1,28 @@
+# VPS deployment.
+#
+# 1. Copy the repo to the VPS:    rsync -avz . root@your-vps:/opt/pk-scraper/
+# 2. ssh into the VPS, then:      cd /opt/pk-scraper && docker compose up -d
+# 3. Watch progress:               docker compose logs -f
+# 4. Get the latest CSV:           rsync -avz root@your-vps:/opt/pk-scraper/exports/articles.csv .
+#
+# The container restarts on crash and survives VPS reboots.
+
+services:
+  scraper:
+    build: .
+    image: pk-scraper:latest
+    container_name: pk-scraper
+    restart: unless-stopped
+    environment:
+      SCRAPER_CONTACT_EMAIL: ${SCRAPER_CONTACT_EMAIL:-you@example.com}
+      URDU_ONLY: "true"
+    volumes:
+      - ./data:/app/data           # SQLite DB persists here
+      - ./exports:/app/exports     # articles.csv refreshed every 15 min
+      - ./httpcache:/app/httpcache # optional — speeds up re-runs
+    # Bound resources so the scraper doesn't crowd out other VPS workloads.
+    deploy:
+      resources:
+        limits:
+          memory: 1.5G
+          cpus: "1.5"
