@@ -14,8 +14,21 @@ import sqlite3
 from pathlib import Path
 
 COLUMNS = [
-    "article_id", "headline", "full_text", "source", "author",
-    "date_published", "url", "category", "article_type", "language", "word_count",
+    # Core identifiers
+    "article_id", "url", "source", "source_domain",
+    # Editorial
+    "headline", "summary", "full_text", "author", "category", "article_type", "tags",
+    # Time
+    "date_published", "published_at", "scraped_at",
+    # Stats
+    "language", "has_urdu", "word_count", "body_chars", "sentence_count",
+    "paragraph_count",
+    # Media
+    "image_url", "image_alt",
+    # Provenance
+    "collection_mode", "extraction_quality", "scrape_status", "content_changed",
+    # Hashes
+    "title_hash", "body_hash", "text_hash",
 ]
 
 DEFAULT_DB = Path(__file__).resolve().parent.parent / "data" / "articles.db"
