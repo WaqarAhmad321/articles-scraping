@@ -47,6 +47,10 @@ LOG_LEVEL = "INFO"
 # Toggle: when True, drop any article whose detected language != "Urdu".
 URDU_ONLY = os.getenv("URDU_ONLY", "true").lower() not in ("0", "false", "no")
 
+# Toggle: when True, drop article_type == "News Report" so the DB only
+# accumulates Opinion / Blog / Editorial. Default off — local dev keeps news.
+OPINION_ONLY = os.getenv("OPINION_ONLY", "false").lower() not in ("0", "false", "no")
+
 ITEM_PIPELINES = {
     "articles_scraper.pipelines.CleanTextPipeline": 100,
     "articles_scraper.pipelines.RequiredFieldsPipeline": 150,
@@ -54,6 +58,7 @@ ITEM_PIPELINES = {
     "articles_scraper.pipelines.UrduOnlyPipeline": 250,
     "articles_scraper.pipelines.WordCountPipeline": 300,
     "articles_scraper.pipelines.ArticleTypePipeline": 400,
+    "articles_scraper.pipelines.OpinionOnlyPipeline": 450,
     "articles_scraper.pipelines.ArticleIdPipeline": 500,
     "articles_scraper.pipelines.SQLitePipeline": 900,
 }

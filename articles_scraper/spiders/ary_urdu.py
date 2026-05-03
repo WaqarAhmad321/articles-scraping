@@ -40,15 +40,7 @@ class AryUrduSpider(BaseSectionSpider):
         return queries
 
     def start_requests(self) -> Iterable[Request]:
-        # On-site search by Urdu keywords first
-        for q in self._search_queries():
-            for page in range(1, 6):
-                if page == 1:
-                    url = f"https://urdu.arynews.tv/?s={quote_plus(q)}"
-                else:
-                    url = f"https://urdu.arynews.tv/page/{page}/?s={quote_plus(q)}"
-                yield Request(url, callback=self.parse_listing,
-                              meta=self._meta(section=f"search:{q}", page=page),
-                              dont_filter=True)
-        # Section walker
+        # Section walker only — search loop disabled because keyword search
+        # returns mostly news, not opinion/column/blog articles. Opinion
+        # harvesting relies entirely on the curated section_pages list.
         yield from super().start_requests()

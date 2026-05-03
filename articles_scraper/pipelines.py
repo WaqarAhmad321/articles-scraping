@@ -89,6 +89,25 @@ class ArticleTypePipeline:
         return item
 
 
+class OpinionOnlyPipeline:
+    """Drop News Report items. Active when settings.OPINION_ONLY=True."""
+
+    def __init__(self, opinion_only: bool):
+        self.opinion_only = opinion_only
+
+    @classmethod
+    def from_crawler(cls, crawler):
+        return cls(opinion_only=crawler.settings.getbool("OPINION_ONLY", False))
+
+    def process_item(self, item, spider):
+        if not self.opinion_only:
+            return item
+        a = ItemAdapter(item)
+        if a.get("article_type") == "News Report":
+            raise DropItem(f"news-report dropped (OPINION_ONLY): {a.get('url')!r}")
+        return item
+
+
 class ArticleIdPipeline:
     def process_item(self, item, spider):
         a = ItemAdapter(item)

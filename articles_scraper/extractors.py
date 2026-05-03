@@ -95,8 +95,14 @@ def _meta_author(response: Response) -> str | None:
 
 
 def _jsonld_section(response: Response) -> str | None:
-    """Read JSON-LD `articleSection` (often the only place that carries the
-    Urdu section name like کالم / اداریہ / بلاگ). Used to classify article_type."""
+    """Read article-section info — used to classify article_type as
+    Opinion/Blog/Editorial. Tries (in order):
+      1. <meta property="article:section">  (Nawaiwaqt, Naya Daur use رائے/تجزیہ)
+      2. JSON-LD `articleSection` (Express, ARY-Urdu, BBC Urdu use کالم/اداریہ/بلاگ)
+    """
+    meta_sec = response.css('meta[property="article:section"]::attr(content)').get()
+    if meta_sec and meta_sec.strip():
+        return meta_sec.strip()
     for raw in _JSONLD_RE.findall(response.text):
         try:
             data = json.loads(raw)

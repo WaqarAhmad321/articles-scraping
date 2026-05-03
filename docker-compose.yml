@@ -16,6 +16,7 @@ services:
     environment:
       SCRAPER_CONTACT_EMAIL: ${SCRAPER_CONTACT_EMAIL:-you@example.com}
       URDU_ONLY: "true"
+      OPINION_ONLY: "true"
     volumes:
       - ./data:/app/data           # SQLite DB persists here
       - ./exports:/app/exports     # articles.csv refreshed every 15 min

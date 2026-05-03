@@ -21,31 +21,35 @@ DB=data/articles.db
 # Each row: spider_name | source_name | target | max_total_per_launch
 # Spiders run in parallel (different domains, no contention).
 SPIDERS=(
-  "express_sitemap|Express News|10000|10000"
-  "bbc_urdu|BBC Urdu|5000|5000"
-  "abbtakk|Abb Takk News|3000|5000"
-  "ary_urdu|ARY News (Urdu)|3000|5000"
-  "dawnnews|Dawn News (Urdu)|3000|5000"
-  "ary|ARY News|500|2000"
-  "geo|Geo News|500|2000"
-  "dawn|Dawn News|500|2000"
+  # Opinion / Blog / Editorial harvest. Each source's config restricts its
+  # crawl to opinion-section listings only. With OPINION_ONLY=true active,
+  # OpinionOnlyPipeline drops anything that still classifies as News Report
+  # so only Opinion/Blog/Editorial rows accumulate in the DB.
+  "express|Express News|10000|10000"
+  "ary_urdu|ARY News (Urdu)|5000|5000"
+  "dawnnews|Dawn News (Urdu)|5000|5000"
+  "humsub|Humsub|10000|10000"
+  "nawaiwaqt|Nawa-i-Waqt|5000|5000"
+  "naya_daur|Naya Daur Urdu|3000|5000"
 )
 
 count_for_source() {
   sqlite3 "$DB" "SELECT COUNT(*) FROM articles WHERE source='$1'" 2>/dev/null || echo 0
 }
 
-# Pick whichever scrapy binary is available. Local dev uses a venv;
+# Pick whichever scrapy/python binaries are available. Local dev uses a venv;
 # the Docker image installs scrapy globally and has no .venv.
 if [ -x ".venv/bin/scrapy" ]; then
   SCRAPY_BIN=".venv/bin/scrapy"
+  PYTHON_BIN=".venv/bin/python"
 elif command -v scrapy > /dev/null 2>&1; then
   SCRAPY_BIN="$(command -v scrapy)"
+  PYTHON_BIN="$(command -v python3 || command -v python)"
 else
   echo "FATAL: scrapy binary not found (tried .venv/bin/scrapy and PATH)"
   exit 1
 fi
-echo "$(date +'%H:%M:%S') keep_alive: using $SCRAPY_BIN"
+echo "$(date +'%H:%M:%S') keep_alive: using $SCRAPY_BIN ($PYTHON_BIN)"
 
 is_running() {
   # Match the python process running this scrapy spider. The `[s]` trick
@@ -88,7 +92,7 @@ while true; do
   # Periodic export so the user wakes up to a fresh CSV regardless of state
   if [ $((NOW - LAST_EXPORT)) -gt $EXPORT_INTERVAL ]; then
     echo "  exporting CSV snapshot..."
-    .venv/bin/python scripts/export.py --out exports/articles.csv > /dev/null 2>&1 \
+    "$PYTHON_BIN" scripts/export.py --out exports/articles.csv > /dev/null 2>&1 \
       && echo "    ✓ exports/articles.csv" \
       || echo "    ✗ export failed"
     LAST_EXPORT=$NOW

@@ -98,36 +98,10 @@ express:
   display_name: "Express News"
   language_default: "Urdu"
   allowed_domains: ["express.pk"]
-  # Express's tag pages give event-targeted listings — much higher precision
-  # than walking 122 × 5000-entry sitemap chunks.
+  # Opinion / column / editorial harvest only. News-tag entries removed —
+  # the dataset's News Report rows are sourced separately. Articles from these
+  # listings flow to article_type=Opinion/Blog/Editorial via _listing_section.
   tag_pages:
-    - "imran-khan"
-    - "imran"
-    - "pti"
-    - "tehreek-e-insaf"
-    - "election-2024"
-    - "general-election-2024"
-    - "form-47"
-    - "form-45"
-    - "imf"
-    - "rupee"
-    - "wheat-crisis"
-    - "atta"
-    - "supreme-court"
-    - "qazi-faez-isa"
-    - "judges-letter"
-    - "26th-amendment"
-    - "gaza"
-    - "israel"
-    - "palestine"
-    - "afghan-refugees"
-    - "afghan"
-    - "deportation"
-    - "azm-e-istehkam"
-    - "category/pakistan"
-    - "category/business"
-    - "category/world"
-    # Opinion / column / editorial sections (Express's strongest opinion archive)
     - "opinion"
     - "opinion/blog"
     - "blog"
@@ -213,14 +187,10 @@ ary_urdu:
   language_default: "Urdu"
   allowed_domains: ["arynews.tv"]
   sitemaps: []
-  section_pages: ["category/pakistan", "category/world", "category/business",
-                  "category/sports", "category/entertainment", "category/regional",
-                  "category/middle-east", "category/asia", "category/national",
-                  "category/health", "category/op-ed", "category/featured",
-                  "category/columns", "category/showbiz",
-                  # Blog/column sections that exist on urdu.arynews.tv
-                  "category/urdu-blogs", "category/blog", "category/blogs"]
-  section_pages_max: 100
+  # Opinion / column / blog harvest only — only /category/urdu-blogs/ exists
+  # on urdu.arynews.tv (the other column/op-ed/blog paths return 404).
+  section_pages: ["category/urdu-blogs"]
+  section_pages_max: 60
   article_url_pattern: "urdu\\.arynews\\.tv/[a-z0-9][a-z0-9-]+/?$"
   render: "static"
   selectors:
@@ -235,16 +205,18 @@ dawnnews:
   # dawnnews.tv is Dawn's Urdu video/news platform. Pages render via JS so we
   # use Playwright for listings; articles themselves are server-rendered.
   sitemaps: []
-  section_pages: ["pakistan", "world", "business", "sports", "entertainment",
-                  "regional", "ovo", "lifestyle",
-                  # Opinion sections (نقطہ نظر / قلم کار / اداریہ / فیچرز / کالم / بلاگ)
-                  "opinions", "opinions/columnist", "opinions/editorial",
+  # Opinion / column / editorial harvest only (نقطہ نظر / قلم کار / اداریہ / فیچرز).
+  section_pages: ["opinions", "opinions/columnist", "opinions/editorial",
                   "opinions/features"]
   section_pages_max: 60
   article_url_pattern: "dawnnews\\.tv/news/\\d+/"
   render: "playwright"
+  # Note: NO bare h1::text fallback — dawnnews's static HTML wraps a
+  # site-title <h1> in the layout that would otherwise win and corrupt
+  # the headline. Letting _first miss falls through to og:title which
+  # carries the actual article headline.
   selectors:
-    headline: "h1.story__title::text, h1::text"
+    headline: "h1.story__title::text"
     author: ".story__byline a::text, .author-name::text"
     date: "span.timestamp__date::attr(title), time::attr(datetime)"
 
@@ -258,4 +230,60 @@ abbtakk:
   selectors:
     headline: "h1.entry-title::text, h1::text"
     author: ".author a::text, .post-author::text"
+    date: "time::attr(datetime), .post-date::text"
+
+nawaiwaqt:
+  # Nawa-i-Waqt — major Urdu daily, prominent op-ed/editorial section.
+  # All five listings below carry article:section="رائے" (opinion) on each
+  # individual article, which the extractor surfaces and the article_type
+  # classifier maps to Opinion. Pagination is JS-driven (page 1 only over HTTP);
+  # keep_alive picks up new articles as they roll into page 1.
+  display_name: "Nawa-i-Waqt"
+  language_default: "Urdu"
+  allowed_domains: ["nawaiwaqt.com.pk"]
+  sitemaps: []
+  section_pages: ["columns", "editorials", "adarate-mazameen", "mazamine", "letters"]
+  section_pages_max: 1
+  article_url_pattern: "nawaiwaqt\\.com\\.pk/[0-9]{2}-[A-Za-z]+-[0-9]{4}/[0-9]+"
+  render: "static"
+  selectors:
+    headline: "h1.entry-title::text"
+    author: ".author-name::text, .post-author a::text"
+    date: 'meta[property="article:published_time"]::attr(content), time::attr(datetime)'
+
+naya_daur:
+  # Naya Daur Urdu — politics-and-opinion site. Only /politics is statically
+  # accessible; articles carry article:section="تجزیہ" (analysis/opinion) which
+  # the article_type classifier maps to Opinion. Articles outside opinion get
+  # section="" and fall to News Report → dropped by OpinionOnlyPipeline.
+  display_name: "Naya Daur Urdu"
+  language_default: "Urdu"
+  allowed_domains: ["urdu.nayadaur.tv"]
+  sitemaps: []
+  section_pages: ["politics"]
+  section_pages_max: 1
+  article_url_pattern: "urdu\\.nayadaur\\.tv/[0-9]{2}-[A-Za-z]+-[0-9]{4}/[0-9]+"
+  render: "static"
+  selectors:
+    headline: "h1.entry-title::text"
+    author: ".author-name::text, .post-author a::text"
+    date: 'meta[property="article:published_time"]::attr(content), time::attr(datetime)'
+
+humsub:
+  # Digital-only Urdu opinion site — `/category/columns` and `/category/blog`
+  # both list ~100 articles per page (WordPress pagination via /page/N/).
+  # Article URL form: humsub.com.pk/<id>/<slug>/ — listing pages use the
+  # /category/<x>/page/N/ form, distinguished by the leading "category/"
+  # path so the article-url-regex won't match them.
+  display_name: "Humsub"
+  language_default: "Urdu"
+  allowed_domains: ["humsub.com.pk"]
+  sitemaps: []
+  section_pages: ["category/columns", "category/blog"]
+  section_pages_max: 50
+  article_url_pattern: "humsub\\.com\\.pk/[0-9]+/[a-zA-Z0-9-]+/?$"
+  render: "static"
+  selectors:
+    headline: "h1.entry-title::text"
+    author: ".author-name::text, .post-author a::text"
     date: "time::attr(datetime), .post-date::text"
